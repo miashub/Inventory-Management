@@ -22,6 +22,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import axios from 'axios';
 
+
+// Load API base URL from environment
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function Scan() {
   const [data, setData] = useState('');
   const [cameraError, setCameraError] = useState(false);
@@ -82,7 +86,7 @@ export default function Scan() {
   // Fetch product info by barcode
   const fetchProduct = useCallback(async (barcode) => {
     try {
-      const res = await axios.get(`/api/products/barcode/${barcode}/`);
+      const res = await axios.get(`${API_BASE_URL}/api/products/barcode/${barcode}/`);
       if (res.status === 200) {
         setProductInfo(res.data.exact || null);
         setSimilarProducts(res.data.similar || []);
@@ -120,7 +124,7 @@ export default function Scan() {
               fetchProduct(decodedText);
             }
           },
-          () => {} // onScanFailure callback — ignored here
+          () => {} 
         ).then(() => {
           scannerRunningRef.current = true;
           scannerRef.current = scanner;
@@ -172,7 +176,7 @@ export default function Scan() {
 
   // Fetch today's scan history on mount
   useEffect(() => {
-    axios.get('/api/history/today/').then((res) => setTodayScans(res.data));
+    axios.get('${API_BASE_URL}/api/history/today/').then((res) => setTodayScans(res.data));
   }, []);
 
   // Resets scan state for a new scan

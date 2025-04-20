@@ -67,8 +67,7 @@ export default function BarcodeScannerModal({ isOpen, onClose, onScan }) {
                 stopScanner();
 
                 // Check if product exists by barcode
-                axios
-                  .get(`/api/products/barcode/${decodedText}/?source=scan-from-add`)
+                axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/barcode/${decodedText}/?source=scan-from-add`)
                   .then((res) => {
                     const exact = res.data?.exact;
                     if (exact?.id) {

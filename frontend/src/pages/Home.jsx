@@ -19,13 +19,21 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+// Load API base URL from environment
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState('all');
 
   // Fetch all products on component mount
   useEffect(() => {
-    axios.get('/api/products/').then(res => setProducts(res.data));
+    axios.get(`${API_BASE_URL}/api/products/`)
+      .then(res => setProducts(res.data))
+      .catch(err => {
+        console.error('Error fetching products:', err);
+        alert('Failed to load products.');
+      });
   }, []);
 
   // Filter logic based on stock levels

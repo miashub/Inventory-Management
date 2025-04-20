@@ -12,6 +12,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProductForm from '../components/ProductForm';
 
+// Load API base URL from environment
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function AddProduct() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
@@ -30,7 +33,7 @@ export default function AddProduct() {
   // Submit handler for form
   const handleAdd = async (productData) => {
     try {
-      await axios.post(`/api/products/?source=${source}`, productData, {
+      await axios.post(`${API_BASE_URL}/api/products/?source=${source}`, productData, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       });

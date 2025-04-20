@@ -14,11 +14,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+
+// Load API base URL from environment
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function ProductLogs() {
   const [logs, setLogs] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
-  // Filter & sort state
   const [nameFilter, setNameFilter] = useState('');
   const [skuFilter, setSkuFilter] = useState('');
   const [actionFilter, setActionFilter] = useState('');
@@ -26,15 +29,15 @@ export default function ProductLogs() {
   const [sortField, setSortField] = useState('timestamp');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  // Fetch logs on load
   useEffect(() => {
-    axios.get('/api/logs/').then(res => {
+    axios.get(`${API_BASE_URL}/api/logs/`).then(res => {
       setLogs(res.data);
       setFiltered(res.data);
+    }).catch(err => {
+      console.error('Failed to fetch product logs:', err);
     });
   }, []);
 
-  // Apply filters and sorting
   useEffect(() => {
     let updated = logs.filter(log =>
       (log.product?.name || '').toLowerCase().includes(nameFilter.toLowerCase()) &&
@@ -69,7 +72,6 @@ export default function ProductLogs() {
     setFiltered(updated);
   }, [logs, nameFilter, skuFilter, actionFilter, sourceFilter, sortField, sortOrder]);
 
-  // Reset all filters to default
   const resetFilters = () => {
     setNameFilter('');
     setSkuFilter('');
@@ -79,7 +81,6 @@ export default function ProductLogs() {
     setSortOrder('desc');
   };
 
-  // Export filtered logs as CSV
   const downloadCSV = () => {
     const headers = ['Product', 'SKU', 'Action', 'Source', 'Qty Change', 'Current Qty', 'Threshold Change', 'Current Threshold', 'Timestamp'];
     const rows = filtered.map(log => [
@@ -107,7 +108,6 @@ export default function ProductLogs() {
 
   return (
     <div className="max-w-7xl mx-auto mt-8 px-4">
-      {/* Header and Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <h2 className="text-2xl font-bold text-indigo-800">Product Logs</h2>
         <div className="flex gap-3">
@@ -120,7 +120,6 @@ export default function ProductLogs() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-4 mb-6">
         <input
           type="text"
@@ -156,7 +155,6 @@ export default function ProductLogs() {
         </select>
       </div>
 
-      {/* Sorting */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <select
           value={sortField}
@@ -177,7 +175,6 @@ export default function ProductLogs() {
         </select>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm border border-gray-300">
           <thead className="bg-orange-50 text-indigo-700 uppercase text-xs tracking-wider">
