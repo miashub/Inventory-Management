@@ -10,6 +10,18 @@ from .models import Product, ScanHistory, ProductActionLog
 from .serializers import ProductSerializer, ScanHistorySerializer
 
 
+def home(request):
+    return JsonResponse({
+        "message": "Welcome to the Inventory Management API",
+        "endpoints": {
+            "products": "/api/products/",
+            "scan_history": "/api/history/",
+            "product_logs": "/api/logs/",
+            "admin": "/admin/"
+        },
+        "status": "OK"
+    })
+
 @csrf_exempt
 @api_view(['GET', 'POST'])
 def products(request):

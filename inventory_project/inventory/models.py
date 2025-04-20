@@ -20,21 +20,27 @@ class Product(models.Model):
         return self.name
 
 
-class ScanHistory(models.Model):
+@api_view(['GET'])
+def scan_history(request):
     """
-    Stores records of barcode scans (e.g., from scanner page or form modal).
-    Not directly tied to a product to allow logging unknown scans.
+    GET: Returns all scan records, including related product info if available.
     """
-    barcode = models.CharField(max_length=100)
-    source = models.CharField(
-        max_length=50,
-        default='scanner',
-        help_text="Origin of the scan (e.g., 'scanner', 'scan-from-add')"
-    )
-    scanned_at = models.DateTimeField(auto_now_add=True)
+    history = ScanHistory.objects.all().order_by('-scanned_at')
+    data = []
 
-    def __str__(self):
-        return self.barcode
+    for entry in history:
+        product = Product.objects.filter(barcode=entry.barcode).first()
+        data.append({
+            'barcode': entry.barcode,
+            'scanned_at': entry.scanned_at,
+            'product': {
+                'name': product.name if product else None,
+                'sku': product.sku if product else None,
+                'id': product.id if product else None,
+            } if product else None
+        })
+
+    return Response(data)
 
 
 class ProductActionLog(models.Model):

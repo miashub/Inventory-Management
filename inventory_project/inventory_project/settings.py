@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
-ALLOWED_HOSTS = ['inventory-backend-a6hg.onrender.com']
+ALLOWED_HOSTS = ['inventory-backend-a6hg.onrender.com',
+'inventory-management-two-zeta.vercel.app',
+]
 
 
 
