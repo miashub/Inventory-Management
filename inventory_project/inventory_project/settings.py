@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
-ALLOWED_HOSTS = ['*']  
+ALLOWED_HOSTS = ['inventory-backend-a6hg.onrender.com']
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,9 +29,6 @@ SECRET_KEY = "django-insecure-d3-+y^qxjtl9yc=d%m3)1ddt(u^nagyphdxi$_-6wvqik36+gb
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
