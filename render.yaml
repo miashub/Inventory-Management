@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: inventory-backend
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn inventory_project.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: inventory_project.settings
+      - key: PYTHON_VERSION
+        value: 3.10
