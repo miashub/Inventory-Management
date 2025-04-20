@@ -135,15 +135,28 @@ def product_by_barcode(request, barcode):
     return Response(response)
 
 
+
 @api_view(['GET'])
 def scan_history(request):
     """
-    GET: Returns all scan records (ScanHistory), sorted by most recent.
+    GET: Returns all scan records, including related product info if available.
     """
     history = ScanHistory.objects.all().order_by('-scanned_at')
-    serializer = ScanHistorySerializer(history, many=True)
-    return Response(serializer.data)
+    data = []
 
+    for entry in history:
+        product = Product.objects.filter(barcode=entry.barcode).first()
+        data.append({
+            'barcode': entry.barcode,
+            'scanned_at': entry.scanned_at,
+            'product': {
+                'name': product.name if product else None,
+                'sku': product.sku if product else None,
+                'id': product.id if product else None,
+            } if product else None
+        })
+
+    return Response(data)
 
 @api_view(['GET'])
 def scan_today(request):
