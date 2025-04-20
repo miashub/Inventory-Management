@@ -1,0 +1,14 @@
+# Python virtual environment
+inventory_project/venv/
+
+# Node modules
+frontend/node_modules/
+
+# Build outputs
+frontend/dist/
+__pycache__/
+*.pyc
+
+# System
+.DS_Store
+.env
