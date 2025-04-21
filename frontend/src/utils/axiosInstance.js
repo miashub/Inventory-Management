@@ -9,14 +9,12 @@
  *   import axios from './axiosInstance';
  *   axios.get('/api/products/')
  *
- * Base URL:
- *   https://inventory-backend-a6hg.onrender.com
  */
 
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://inventory-backend-a6hg.onrender.com',
+  baseURL: process.env.REACT_APP_API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
