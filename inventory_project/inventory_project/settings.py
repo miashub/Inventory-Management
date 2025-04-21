@@ -103,14 +103,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS and CSRF setup for Vercel frontend
 CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     'https://inventory-management-git-main-miashubs-projects.vercel.app',
+    'https://inventory-management-two-zeta.vercel.app',
 ]
-CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://inventory-management-git-main-miashubs-projects.vercel.app',
+    'https://inventory-management-two-zeta.vercel.app',
 ]
+
 
 # Secure cookies and session settings
 SESSION_COOKIE_SECURE = True
