@@ -1,131 +1,134 @@
 # Inventory Management System
 
-A full-stack inventory management system built with **Django REST Framework** and **React**. Designed to simplify product tracking, stock level monitoring, and audit logging, this solution includes integrated barcode scanning for fast and accurate product handling.
-
-🌐 **Live Demo**  
-- 🔗 Frontend (Vercel): [https://inventory-management-two-zeta.vercel.app](https://inventory-management-two-zeta.vercel.app)  
-- 🔗 Backend (Render): [https://inventory-backend-a6hg.onrender.com](https://inventory-backend-a6hg.onrender.com)
+A full-stack inventory management solution built with **Django REST Framework** and **React**. This application streamlines product tracking, barcode scanning, stock alerts, and detailed audit logging through a responsive and user-friendly interface.
 
 ---
 
-## 📌 Key Features
+### **Live Demo**
 
-- **Product Management**: Create, update, and delete products with essential details (name, SKU, quantity, threshold, barcode).
-- **Barcode Scanning**: Real-time barcode scanning using the device camera (`html5-qrcode`).
-- **Stock Alerts**: Automatic low stock indicators based on customizable alert thresholds.
-- **Scan Log**: View timestamped logs of all barcode scan activity.
-- **Product Log**: Track changes to products including additions, edits, and quantity/threshold modifications.
-- **CSV Export**: Export scan and product logs for reporting and backups.
-- **Confirmation Modals**: Modern, styled confirmation prompts for safe actions like product deletion.
-- **Clean UI**: Fully responsive frontend built with Tailwind CSS.
+- **Frontend (Vercel):** [https://inventory-management-two-zeta.vercel.app](https://inventory-management-two-zeta.vercel.app)  
+- **Backend (Render):** [https://inventory-backend-a6hg.onrender.com](https://inventory-backend-a6hg.onrender.com)
 
 ---
 
-## 🖥️ Technology Stack
+### **Key Features**
 
-| Layer        | Tools / Frameworks                             |
-|--------------|-------------------------------------------------|
-| Frontend     | React, React Router, Axios, Tailwind CSS        |
-| Backend      | Django, Django REST Framework                   |
-| Database     | SQLite (default, can be replaced with PostgreSQL) |
-| Barcode Scan | `html5-qrcode` (camera-based barcode detection) |
+- **Product Management:** Add, update, and remove products with attributes like name, SKU, quantity, threshold, and barcode.
+- **Barcode Scanning:** Utilize device camera to scan barcodes in real-time with `html5-qrcode`.
+- **Stock Alerts:** Automatically highlight products that are low or nearly low in stock.
+- **Scan Log:** Maintain a timestamped log of all barcode scans, including source context.
+- **Product Log:** Track product changes, including quantity or threshold updates.
+- **CSV Export:** Export logs for backups or reporting purposes.
+- **Responsive Design:** Built with Tailwind CSS for modern, mobile-friendly UI.
+- **Confirmation Modals:** Ensure safe deletion with stylish confirmation prompts.
 
 ---
 
-## 🚀 Getting Started
+### **Technology Stack**
 
-### 📁 1. Clone the Repository
+| Layer       | Tools / Frameworks                              |
+|-------------|--------------------------------------------------|
+| Frontend    | React, React Router, Axios, Tailwind CSS         |
+| Backend     | Django, Django REST Framework                    |
+| Database    | SQLite (can be swapped with PostgreSQL)          |
+| Barcode     | html5-qrcode (for camera-based barcode scanning) |
+
+---
+
+### **Getting Started**
+
+#### **1. Clone the Repository**
 
 ```bash
 git clone https://github.com/yourusername/inventory-management.git
 cd inventory-management
+```
 
-----------------------------------------------------------------------------------------------------
+#### **2. Backend Setup – Django**
 
-⚙️ 2. Backend Setup – Django
-
+```bash
 cd inventory_project
 python -m venv venv
 source venv/bin/activate        # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Migrate database
 python manage.py migrate
-
-# Start the development server
 python manage.py runserver
+```
 
-----------------------------------------------------------------------------------------------------
+---
 
+### **Application Overview**
 
-🧭 Application Overview
+| Route         | Description                                                |
+|---------------|------------------------------------------------------------|
+| `/`           | Home page with full product list and stock indicators      |
+| `/add`        | Add new product manually or via barcode scanner            |
+| `/edit/:id`   | Edit or delete existing product                            |
+| `/scan`       | Launch barcode scanner for product lookup or creation      |
+| `/scan-log`   | View detailed history of barcode scans                     |
+| `/product-log`| View changes to product details and stock levels           |
 
-Route             	Description
-/	              	Homepage listing products with stock indicators
-/add             	Add a new product manually or via barcode scanner
-/edit/:id           Edit existing product details or delete
-/scan             	Open camera scanner to locate or register products
-/scan-log           View all barcode scans with timestamp and context
-/product-log	    View all product modifications and quantity changes
+---
 
-----------------------------------------------------------------------------------------------------
+### **Product Lifecycle**
 
-🔄 Product Lifecycle Flow
-Scan a barcode from the Scan page.
+1. Scan a barcode on the **Scan** page.
+2. If the product exists → Redirected to **Edit Product**.
+3. If not found → Redirected to **Add Product** with barcode pre-filled.
+4. After saving or updating → Changes are recorded in the logs.
+5. Stock levels are continuously monitored for alerts.
 
-If product exists → redirected to Edit Product.
+---
 
-If not found → redirected to Add Product, with the scanned barcode pre-filled.
+### **Project Structure**
 
-Save or update product → change is logged automatically.
-
-Logs available in Scan Log and Product Log pages.
-
-Products with quantity ≤ threshold are flagged on the dashboard.
-
-----------------------------------------------------------------------------------------------------
-
-📂 Folder Structure
-
+```
 inventory-management/
-├── inventory_project/     # Django backend (API, models, views, logs)
-│   ├── inventory/         # Main app: Product + Scan + Log logic
+├── inventory_project/       # Django backend
+│   ├── inventory/           # Main Django app (logic, models, views)
 │   └── manage.py
-├── frontend/              # React frontend (UI)
+├── frontend/                # React frontend
 │   ├── src/
-│   │   ├── pages/         # Page components (Scan, Add, Edit, Logs)
-│   │   ├── components/    # Reusable components (ProductForm, Navbar)
+│   │   ├── pages/           # Page-level components
+│   │   ├── components/      # Reusable UI components
 │   └── public/
 ├── README.md
+```
 
-----------------------------------------------------------------------------------------------------
+---
 
-🔮 Future Enhancements
-User authentication and role-based access (admin/staff)
+### **Planned Enhancements**
 
-Advanced analytics dashboard
+- User authentication and role-based access (admin/staff)
+- Advanced analytics and reporting dashboard
+- Product categories and tagging system
+- Improved performance and mobile UX
 
-Product categorization and tagging
+---
 
-Enhanced mobile optimization
+### **Contributing**
 
-----------------------------------------------------------------------------------------------------
+Contributions are welcome! To contribute:
 
-🤝 Contributing
-Contributions are welcome! Fork the repository, make your changes, and open a pull request with a detailed explanation. For bugs or feature suggestions, please open an issue.
+1. Fork the repository.
+2. Create a new branch.
+3. Make your changes.
+4. Submit a pull request with a detailed description.
 
-----------------------------------------------------------------------------------------------------
+For feature requests or bug reports, please open an issue.
 
-📄 License
-This project is licensed under the MIT License – open to use, modify, and distribute.
+---
 
-----------------------------------------------------------------------------------------------------
+### **License**
 
-📬 Contact
-For questions or collaboration opportunities:
+This project is licensed under the **MIT License** — free to use, modify, and distribute.
 
-📧 Email: fathimas0207.email@example.com
+---
 
-💻 GitHub: github.com/miashub
+### **Contact**
 
-🔗 LinkedIn: linkedin.com/in/mia-shajahan
+For any questions or collaboration:
+
+- **Email:** [fathimas0207.email@example.com](mailto:fathimas0207.email@example.com)  
+- **GitHub:** [github.com/miashub](https://github.com/miashub)  
+- **LinkedIn:** [linkedin.com/in/mia-shajahan](https://linkedin.com/in/mia-shajahan)
