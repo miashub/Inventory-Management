@@ -124,8 +124,8 @@ This project is licensed under the MIT License – open to use, modify, and dist
 📬 Contact
 For questions or collaboration opportunities:
 
-📧 Email: fathimas0207.email@example.com
+📧  - **Email:** [fathimas0207.email@example.com](mailto:fathimas0207.email@example.com)
 
-💻 GitHub: github.com/miashub
+💻 - **GitHub:** [github.com/miashub](https://github.com/miashub)
 
-🔗 LinkedIn: linkedin.com/in/mia-shajahan
+🔗 -**LinkedIn:** [linkedin.com/in/mia-shajahan](https://linkedin.com/in/mia-shajahan)
