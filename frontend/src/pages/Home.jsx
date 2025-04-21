@@ -25,19 +25,15 @@ export default function Home() {
   useEffect(() => {
     axios.get(`/api/products/`)
       .then(res => {
-        console.log('Axios response:', res);
-        if (Array.isArray(res.data)) {
-          setProducts(res.data);
-        } else {
-          console.error('Unexpected data format:', res.data);
-          alert('Unexpected response format. Check backend.');
-        }
+        console.log('🚀 Full Axios response:', res);
+        console.log('📦 res.data:', res.data);
+        setProducts(res.data); // We'll handle this after seeing the structure
       })
       .catch(err => {
-        console.error('Error fetching products:', err);
+        console.error('❌ Error fetching products:', err);
         alert('Failed to load products.');
       });
-  }, []);
+  }, []);  
 
   // Filter logic with safety check
   const filteredProducts = Array.isArray(products)
