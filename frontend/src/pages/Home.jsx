@@ -1,3 +1,5 @@
+// frontend/src/pages/Home.jsx
+
 /**
  * Home Page – Product Inventory
  *
@@ -24,29 +26,24 @@ export default function Home() {
   // Fetch all products on component mount
   useEffect(() => {
     axios.get(`/api/products/`)
-      .then(res => {
-        console.log('Fetched products:', res.data);
-        setProducts(res.data);
-      })
+      .then(res => setProducts(res.data))
       .catch(err => {
         console.error('Error fetching products:', err);
         alert('Failed to load products.');
       });
   }, []);
 
-  // Filter logic with safety check
-  const filteredProducts = Array.isArray(products)
-    ? products.filter(product => {
-        if (filter === 'low') return product.quantity <= product.alert_threshold;
-        if (filter === 'almost') {
-          return (
-            product.quantity > product.alert_threshold &&
-            product.quantity <= product.alert_threshold + 5
-          );
-        }
-        return true;
-      })
-    : [];
+  // Filter logic based on stock levels
+  const filteredProducts = products.filter(product => {
+    if (filter === 'low') return product.quantity <= product.alert_threshold;
+    if (filter === 'almost') {
+      return (
+        product.quantity > product.alert_threshold &&
+        product.quantity <= product.alert_threshold + 5
+      );
+    }
+    return true;
+  });
 
   return (
     <div className="max-w-7xl mx-auto p-6">
