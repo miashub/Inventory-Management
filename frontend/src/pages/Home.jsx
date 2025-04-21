@@ -1,5 +1,3 @@
-// frontend/src/pages/Home.jsx
-
 /**
  * Home Page – Product Inventory
  *
@@ -16,7 +14,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import axios from '../utils/axiosInstance';
+import axios from '../utils/axiosInstance'; // Make sure this is set up with baseURL + withCredentials
 import { Link } from 'react-router-dom';
 
 export default function Home() {
@@ -26,24 +24,34 @@ export default function Home() {
   // Fetch all products on component mount
   useEffect(() => {
     axios.get(`/api/products/`)
-      .then(res => setProducts(res.data))
+      .then(res => {
+        console.log('Axios response:', res);
+        if (Array.isArray(res.data)) {
+          setProducts(res.data);
+        } else {
+          console.error('Unexpected data format:', res.data);
+          alert('Unexpected response format. Check backend.');
+        }
+      })
       .catch(err => {
         console.error('Error fetching products:', err);
         alert('Failed to load products.');
       });
   }, []);
 
-  // Filter logic based on stock levels
-  const filteredProducts = products.filter(product => {
-    if (filter === 'low') return product.quantity <= product.alert_threshold;
-    if (filter === 'almost') {
-      return (
-        product.quantity > product.alert_threshold &&
-        product.quantity <= product.alert_threshold + 5
-      );
-    }
-    return true;
-  });
+  // Filter logic with safety check
+  const filteredProducts = Array.isArray(products)
+    ? products.filter(product => {
+        if (filter === 'low') return product.quantity <= product.alert_threshold;
+        if (filter === 'almost') {
+          return (
+            product.quantity > product.alert_threshold &&
+            product.quantity <= product.alert_threshold + 5
+          );
+        }
+        return true;
+      })
+    : [];
 
   return (
     <div className="max-w-7xl mx-auto p-6">
