@@ -18,6 +18,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'inventory-backend-a6hg.onrender.com',
+    'inventory-management-two-zeta.vercel.app',
 ]
 
 # Application definition
