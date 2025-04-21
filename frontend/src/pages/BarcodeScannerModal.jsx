@@ -130,7 +130,7 @@ export default function BarcodeScannerModal({ isOpen, onClose, onScan }) {
         {/* Error Message */}
         {cameraError && (
           <p className="text-red-600 text-sm mt-2">
-            ⚠️ Unable to access camera. Try another device or browser.
+            Unable to access camera. Try another device or browser.
           </p>
         )}
 

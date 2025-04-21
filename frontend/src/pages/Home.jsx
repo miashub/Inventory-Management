@@ -14,28 +14,40 @@
  */
 
 import { useEffect, useState } from 'react';
-import axios from '../utils/axiosInstance'; // Make sure this is set up with baseURL + withCredentials
+import axios from '../utils/axiosInstance';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
 
-  // Fetch all products on component mount
+  // Fetch products on mount
   useEffect(() => {
     axios.get(`/api/products/`)
       .then(res => {
-        console.log('🚀 Full Axios response:', res);
-        console.log('📦 res.data:', res.data);
-        setProducts(res.data); // We'll handle this after seeing the structure
+        setProducts(res.data);
+        setLoading(false);
       })
       .catch(err => {
-        console.error('❌ Error fetching products:', err);
+        console.error('Error fetching products:', err);
         alert('Failed to load products.');
+        setLoading(false);
       });
-  }, []);  
+  }, []);
 
-  // Filter logic with safety check
+  // Show loading screen while fetching
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-indigo-600 border-t-transparent mb-4"></div>
+        <h2 className="text-xl font-semibold text-gray-700">Loading inventory...</h2>
+        <p className="text-gray-500 mt-2">Please wait while we connect to the backend.</p>
+      </div>
+    );
+  }
+
+  // Filtering logic
   const filteredProducts = Array.isArray(products)
     ? products.filter(product => {
         if (filter === 'low') return product.quantity <= product.alert_threshold;
@@ -96,7 +108,6 @@ export default function Home() {
                   : 'bg-white border-gray-200'
               }`}
             >
-              {/* Header + Stock Badge */}
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
                 {isLow && (
@@ -111,11 +122,9 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Product Info */}
               <p className="text-sm text-gray-600">SKU: {product.sku}</p>
               <p className="text-sm text-gray-600 mb-3">Qty: {product.quantity}</p>
 
-              {/* Edit Link */}
               <Link
                 to={`/edit/${product.id}`}
                 className="inline-block mt-2 text-sm font-semibold text-indigo-600 hover:text-orange-500 transition-colors"
