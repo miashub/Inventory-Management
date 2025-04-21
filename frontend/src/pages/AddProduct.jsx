@@ -30,10 +30,7 @@ export default function AddProduct() {
   // Submit handler for form
   const handleAdd = async (productData) => {
     try {
-      await axios.post(`/api/products/?source=${source}`, productData, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      await axios.post(`/api/products/?source=${source}`, productData);
       alert('Product added!');
       navigate('/');
     } catch (err) {

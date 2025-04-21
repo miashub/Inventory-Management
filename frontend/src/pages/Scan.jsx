@@ -16,7 +16,6 @@
  * - Manages camera resources safely
  * - Supports scan history logging and dynamic redirection
  */
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
@@ -40,7 +39,6 @@ export default function Scan() {
   const timeoutRef = useRef(null);
   const beepRef = useRef(new Audio('/beep.mp3'));
 
-  // Gracefully stops the scanner and clears video resources
   const stopScanner = async () => {
     try {
       if (scannerRunningRef.current && scannerRef.current) {
@@ -53,7 +51,6 @@ export default function Scan() {
       scannerRunningRef.current = false;
       scannerRef.current = null;
 
-      // Stop and remove all video tracks manually
       document.querySelectorAll('video').forEach((v) => {
         if (v.srcObject) {
           v.srcObject.getTracks().forEach((t) => t.stop());
@@ -64,7 +61,6 @@ export default function Scan() {
     }
   };
 
-  // Capture current frame from the video as base64 image
   const captureFrame = useCallback(async () => {
     const video = document.querySelector('video');
     if (!video) return;
@@ -79,7 +75,6 @@ export default function Scan() {
     await stopScanner();
   }, []);
 
-  // Fetch product info by barcode
   const fetchProduct = useCallback(async (barcode) => {
     try {
       const res = await axios.get(`/api/products/barcode/${barcode}/`);
@@ -97,7 +92,6 @@ export default function Scan() {
     }
   }, []);
 
-  // Initialize scanner and handle barcode detection
   const startScanner = useCallback(() => {
     const scanner = new Html5Qrcode('reader', {
       formatsToSupport: [Html5QrcodeSupportedFormats.UPC_A],
@@ -120,7 +114,7 @@ export default function Scan() {
               fetchProduct(decodedText);
             }
           },
-          () => {} 
+          () => {}
         ).then(() => {
           scannerRunningRef.current = true;
           scannerRef.current = scanner;
@@ -135,7 +129,6 @@ export default function Scan() {
       });
   }, [captureFrame, fetchProduct]);
 
-  // Start/stop scanner when scanning state changes
   useEffect(() => {
     const currentTimeout = timeoutRef.current;
     if (scanning) {
@@ -148,7 +141,6 @@ export default function Scan() {
     };
   }, [scanning, startScanner]);
 
-  // Pause scanner when browser tab is inactive
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
@@ -170,12 +162,19 @@ export default function Scan() {
     };
   }, [scanning, capturedImage, startScanner]);
 
-  // Fetch today's scan history on mount
+  // ✅ FIXED: Proper axios call + safety check
   useEffect(() => {
-    axios.get('${API_BASE_URL}/api/history/today/').then((res) => setTodayScans(res.data));
+    axios.get('/api/history/today/')
+      .then((res) => {
+        console.log('Scan history:', res.data);
+        setTodayScans(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error('Error fetching today scan log:', err);
+        setTodayScans([]);
+      });
   }, []);
 
-  // Resets scan state for a new scan
   const resetScan = async () => {
     await stopScanner();
     setCapturedImage(null);
@@ -186,7 +185,6 @@ export default function Scan() {
     setTimeout(() => setScanning(true), 300);
   };
 
-  // Redirects to Add Product page with scanned barcode
   const redirectToAddWithBarcode = async () => {
     await stopScanner();
     const params = new URLSearchParams(location.search);
@@ -195,12 +193,10 @@ export default function Scan() {
     navigate(`/add?${params.toString()}`);
   };
 
-  // ---- JSX Output ----
   return (
     <div className="flex flex-col items-center mt-8 px-4">
       <h2 className="text-2xl font-bold text-indigo-800 mb-4">Scan UPC Barcode</h2>
 
-      {/* Live scanner or captured preview */}
       {!capturedImage && scanning ? (
         <>
           <div id="reader" className="w-full max-w-sm h-64 rounded-md shadow-md overflow-hidden" />
@@ -213,12 +209,10 @@ export default function Scan() {
         </>
       )}
 
-      {/* Error message if camera fails */}
       {cameraError && (
         <p className="mt-2 text-red-500 text-sm">⚠️ Camera error. Check permissions or try another browser/device.</p>
       )}
 
-      {/* Product match display */}
       {productInfo && (
         <div className="mt-6 p-4 bg-white border border-orange-200 rounded-xl shadow max-w-md w-full">
           <h3 className="text-lg font-semibold text-indigo-700 mb-2">Suggested Product</h3>
@@ -235,7 +229,6 @@ export default function Scan() {
         </div>
       )}
 
-      {/* Similar products list */}
       {similarProducts.length > 0 && (
         <div className="mt-4 p-4 bg-gray-50 border border-orange-100 rounded-md shadow max-w-md w-full">
           <h3 className="text-lg font-semibold text-indigo-700 mb-2">Other Possibilities</h3>
@@ -255,7 +248,6 @@ export default function Scan() {
         </div>
       )}
 
-      {/* Option to add a new product if no match */}
       {!productInfo && !similarProducts.length && data && (
         <button
           onClick={redirectToAddWithBarcode}
@@ -265,7 +257,6 @@ export default function Scan() {
         </button>
       )}
 
-      {/* Control buttons */}
       {!scanning && (
         <button onClick={resetScan} className="mt-4 text-sm text-indigo-600 underline">
           Scan Another Item
@@ -282,8 +273,7 @@ export default function Scan() {
         Cancel
       </button>
 
-      {/* Scan history table */}
-      {todayScans.length > 0 && (
+      {Array.isArray(todayScans) && todayScans.length > 0 && (
         <div className="mt-10 w-full max-w-4xl bg-white border border-orange-200 rounded-xl shadow-lg p-6">
           <h3 className="text-2xl font-bold text-indigo-800 mb-6 border-b border-orange-300 pb-2 text-center">
             Today’s Scan Log
