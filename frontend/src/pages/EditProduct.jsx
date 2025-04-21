@@ -9,11 +9,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import ProductForm from '../components/ProductForm';
 
-// Load API base URL from environment
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -24,7 +22,7 @@ export default function EditProduct() {
 
   // Fetch product details on mount
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/products/${id}/`)
+    axios.get(`/api/products/${id}/`)
       .then(res => setProduct(res.data))
       .catch(() => alert('Failed to fetch product'));
   }, [id]);
@@ -32,7 +30,7 @@ export default function EditProduct() {
   // Submit updated form
   const handleSubmit = async (form) => {
     try {
-      await axios.put(`${API_BASE_URL}/api/products/${id}/?source=${source}`, form, {
+      await axios.put(`/api/products/${id}/?source=${source}`, form, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       });
@@ -47,7 +45,7 @@ export default function EditProduct() {
   // Confirm delete
   const confirmDelete = async () => {
     try {
-      await axios.delete(`${API_BASE_URL}/api/products/${id}/`);
+      await axios.delete(`/api/products/${id}/`);
       navigate('/');
     } catch (err) {
       console.error(err);

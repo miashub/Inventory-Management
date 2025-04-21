@@ -18,7 +18,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 
 export default function BarcodeScannerModal({ isOpen, onClose, onScan }) {
   const scannerRef = useRef(null);
@@ -67,7 +67,7 @@ export default function BarcodeScannerModal({ isOpen, onClose, onScan }) {
                 stopScanner();
 
                 // Check if product exists by barcode
-                axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/barcode/${decodedText}/?source=scan-from-add`)
+                axios.get(`/api/products/barcode/${decodedText}/?source=scan-from-add`)
                   .then((res) => {
                     const exact = res.data?.exact;
                     if (exact?.id) {

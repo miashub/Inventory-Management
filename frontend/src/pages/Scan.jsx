@@ -20,11 +20,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import axios from 'axios';
-
-
-// Load API base URL from environment
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import axios from '../utils/axiosInstance';
 
 export default function Scan() {
   const [data, setData] = useState('');
@@ -86,7 +82,7 @@ export default function Scan() {
   // Fetch product info by barcode
   const fetchProduct = useCallback(async (barcode) => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/products/barcode/${barcode}/`);
+      const res = await axios.get(`/api/products/barcode/${barcode}/`);
       if (res.status === 200) {
         setProductInfo(res.data.exact || null);
         setSimilarProducts(res.data.similar || []);

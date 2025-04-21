@@ -11,11 +11,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-
-// Load API base URL from environment
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import axios from '../utils/axiosInstance';
 
 export default function ScanLog() {
   const [history, setHistory] = useState([]);
@@ -27,7 +23,7 @@ export default function ScanLog() {
 
   // Fetch scan history on load
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/history/`).then((res) => setHistory(res.data));
+    axios.get(`/api/history/`).then((res) => setHistory(res.data));
   }, []);
 
   // Apply filters and sorting

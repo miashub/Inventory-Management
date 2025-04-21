@@ -16,11 +16,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { Link } from 'react-router-dom';
-
-// Load API base URL from environment
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -28,7 +25,7 @@ export default function Home() {
 
   // Fetch all products on component mount
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/products/`)
+    axios.get(`/api/products/`)
       .then(res => setProducts(res.data))
       .catch(err => {
         console.error('Error fetching products:', err);

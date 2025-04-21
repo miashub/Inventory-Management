@@ -12,11 +12,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-
-// Load API base URL from environment
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import axios from '../utils/axiosInstance';
 
 export default function ProductLogs() {
   const [logs, setLogs] = useState([]);
@@ -30,7 +26,7 @@ export default function ProductLogs() {
   const [sortOrder, setSortOrder] = useState('desc');
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/logs/`).then(res => {
+    axios.get(`/api/logs/`).then(res => {
       setLogs(res.data);
       setFiltered(res.data);
     }).catch(err => {
