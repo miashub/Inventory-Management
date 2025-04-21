@@ -16,7 +16,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: 'https://inventory-backend-a6hg.onrender.com',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

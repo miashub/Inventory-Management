@@ -20,12 +20,15 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
 
   // Fetch products on mount
   useEffect(() => {
+    setLoading(true);
+
     axios.get(`/api/products/`)
       .then(res => {
+        console.log('✅ Products loaded:', res.data);
         setProducts(res.data);
         setLoading(false);
       })
@@ -36,7 +39,7 @@ export default function Home() {
       });
   }, []);
 
-  // Show loading screen while fetching
+  // Show loading spinner while waiting for data
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
