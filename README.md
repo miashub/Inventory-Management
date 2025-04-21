@@ -34,7 +34,7 @@ A full-stack inventory management system built with **Django REST Framework** an
 
 ## 🚀 Getting Started
 
-### 📁 1. Clone the Repository
+📁 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/inventory-management.git
