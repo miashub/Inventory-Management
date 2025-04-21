@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import localdate
 from .models import Product, ScanHistory, ProductActionLog
 from .serializers import ProductSerializer, ScanHistorySerializer
+from django.http import JsonResponse
+
 
 
 def home(request):

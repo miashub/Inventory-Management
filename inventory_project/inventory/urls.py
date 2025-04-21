@@ -25,8 +25,6 @@ from .views import (
 
 urlpatterns = [
 
-    path('', home), 
-
     # Product endpoints
     path('products/', products, name='product-list-create'),
     path('products/<int:pk>/', product_detail, name='product-detail'),
