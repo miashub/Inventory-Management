@@ -20,7 +20,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://inventory-management-git-main-miashubs-projects.vercel.app'
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://inventory-management-two-zeta.vercel.app,
+    'https://inventory-management-two-zeta.vercel.app',
     'https://inventory-management-git-main-miashubs-projects.vercel.app'
 ]
 
