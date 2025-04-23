@@ -15,10 +15,13 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 # CORS & CSRF
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://inventory-management-two-zeta.vercel.app",
+
+    'https://inventory-management-two-zeta.vercel.app',
+    'https://inventory-management-git-main-miashubs-projects.vercel.app'
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://inventory-management-two-zeta.vercel.app",
+    'https://inventory-management-two-zeta.vercel.app,
+    'https://inventory-management-git-main-miashubs-projects.vercel.app'
 ]
 
 # Application definition
