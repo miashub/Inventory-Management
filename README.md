@@ -30,7 +30,7 @@ A full-stack inventory management solution built with **Django REST Framework** 
 |-------------|--------------------------------------------------|
 | Frontend    | React, React Router, Axios, Tailwind CSS         |
 | Backend     | Django, Django REST Framework                    |
-| Database    | SQLite (can be swapped with PostgreSQL)          |
+| Database    | PostgreSQL                                       |
 | Barcode     | html5-qrcode (for camera-based barcode scanning) |
 
 ---
