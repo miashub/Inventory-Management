@@ -37,3 +37,4 @@ yarn-error.log*
 frontend/.env
 *.env*
 *.env
+venv
