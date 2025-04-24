@@ -14,15 +14,8 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # CORS & CSRF
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-
-    'https://inventory-management-two-zeta.vercel.app',
-    'https://inventory-management-git-main-miashubs-projects.vercel.app'
-]
-CSRF_TRUSTED_ORIGINS = [
-    'https://inventory-management-two-zeta.vercel.app',
-    'https://inventory-management-git-main-miashubs-projects.vercel.app'
-]
+CORS_ALLOWED_ORIGINS = ["https://inventoryfrontened.vercel.app","https://inventoryfrontend-kuvj7nofv-miashubs-projects.vercel.app"]
+CSRF_TRUSTED_ORIGINS = ["https://inventoryfrontened.vercel.app","https://inventoryfrontend-kuvj7nofv-miashubs-projects.vercel.app"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -82,9 +75,6 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
 CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
 SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", ".vercel.app")
-CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", ".vercel.app")
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
