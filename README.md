@@ -6,8 +6,8 @@ A full-stack inventory management solution built with **Django REST Framework** 
 
 ### **Live Demo**
 
-- **Frontend (Vercel):** [https://inventory-management-two-zeta.vercel.app](https://inventory-management-two-zeta.vercel.app)  
-- **Backend (Render):** [https://inventory-backend-a6hg.onrender.com](https://inventory-backend-a6hg.onrender.com)
+- **Frontend (Vercel):** [https://inventoryfrontened.vercel.app](https://inventoryfrontened.vercel.app)  
+- **Backend (Render):** [https://inventory-backend-1tlk.onrender.com](https://inventory-backend-1tlk.onrender.com)
 
 ---
 

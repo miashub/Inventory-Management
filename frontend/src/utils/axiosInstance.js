@@ -1,15 +1,37 @@
 /**
  * Axios Instance – Configured HTTP client for API requests
  *
- * This instance sets a base URL for all API requests and includes credentials
- * (like cookies) with each request. It also sets the default content type
- * to 'application/json' for proper request formatting.
+ * This instance is preconfigured to:
+ * - Use a base URL from the environment variable (REACT_APP_API_BASE_URL)
+ * - Send credentials (like cookies/session tokens) with each request (withCredentials: true)
+ * - Use 'application/json' as the default Content-Type
+ * - Automatically attach the CSRF token (from cookies) to all requests for CSRF protection
  *
- * Usage:
+ * This central configuration ensures consistent API behavior across the app and avoids 
+ * repeating boilerplate settings for every request.
+ *
+ * Example Usage:
  *   import axios from './axiosInstance';
- *   axios.get('/api/products/')
  *
+ *   // Get all products
+ *   axios.get('/api/products/');
+ *
+ *   // Get a product by ID
+ *   axios.get(`/api/products/${id}/`);
+ *
+ *   // Get product details by barcode
+ *   axios.get(`/api/products/barcode/${barcode}/`);
+ *
+ *   // Get product details with source = scan-from-add
+ *   axios.get(`/api/products/barcode/${decodedText}/?source=scan-from-add`);
+ *
+ *   // Create a new product
+ *   axios.post(`/api/products/?source=${source}`, productData);
+ *
+ *   // Get product logs
+ *   axios.get('/api/logs/');
  */
+
 import axios from 'axios';
 
 const instance = axios.create({
@@ -20,13 +42,13 @@ const instance = axios.create({
   },
 });
 
-// CSRF Token handling for production
+// Automatically include CSRF token in request headers for secure POST/PUT/DELETE
 instance.interceptors.request.use((config) => {
   const csrfToken = document.cookie
     .split('; ')
     .find(row => row.startsWith('csrftoken='))
     ?.split('=')[1];
-  
+
   if (csrfToken) {
     config.headers['X-CSRFToken'] = csrfToken;
   }
