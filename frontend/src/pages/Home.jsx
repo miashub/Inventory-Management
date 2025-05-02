@@ -1,17 +1,17 @@
-/**
- * Home Page – Product Inventory
- *
- * Displays a list of all products in inventory with filter options.
- * Filters:
- *  - All Products
- *  - Low Stock (quantity <= alert threshold)
- *  - Almost Low (within 5 units of threshold)
- *
- * Highlights:
- *  - Dynamic filtering
- *  - Color-coded cards based on stock levels
- *  - Navigation to edit each product
- */
+// * Home Page – Product Inventory
+//  *
+//  * Displays a list of all products in inventory with filter options.
+//  * Filters:
+//  *  - All Products
+//  *  - Low Stock (quantity <= alert threshold)
+//  *  - Almost Low (within 5 units of threshold)
+//  *  - Expired (expiry_date has passed)
+//  *  - Almost Expired (expiry within 5 days)
+//  *
+//  * Highlights:
+//  *  - Dynamic filtering by stock and expiry status
+//  *  - Color-coded cards based on stock and expiry
+//  *  - Navigation to edit each product
 
 import { useEffect, useState } from 'react';
 import axios from '../utils/axiosInstance';
@@ -20,15 +20,13 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState('all');
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
-  // Fetch products on mount
+  // Fetch all products on component mount
   useEffect(() => {
     setLoading(true);
-
     axios.get(`/api/products/`)
       .then(res => {
-        console.log('✅ Products loaded:', res.data);
         setProducts(res.data);
         setLoading(false);
       })
@@ -39,7 +37,7 @@ export default function Home() {
       });
   }, []);
 
-  // Show loading spinner while waiting for data
+  // Show spinner while loading
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -50,9 +48,13 @@ export default function Home() {
     );
   }
 
-  // Filtering logic
+  // Apply dynamic filtering based on stock level and expiry
   const filteredProducts = Array.isArray(products)
     ? products.filter(product => {
+        const now = new Date();
+        const expiry = product.expiry_date ? new Date(product.expiry_date) : null;
+        const daysLeft = expiry ? (expiry - now) / (1000 * 60 * 60 * 24) : null;
+
         if (filter === 'low') return product.quantity <= product.alert_threshold;
         if (filter === 'almost') {
           return (
@@ -60,13 +62,15 @@ export default function Home() {
             product.quantity <= product.alert_threshold + 5
           );
         }
-        return true;
+        if (filter === 'expired') return expiry && expiry < now;
+        if (filter === 'almost_expired') return expiry && expiry >= now && daysLeft <= 5;
+        return true; // default to all
       })
     : [];
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      {/* Page Title */}
+      {/* Page Heading */}
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-indigo-800 border-b-2 border-orange-400 inline-block pb-1">
           Product Inventory
@@ -74,11 +78,13 @@ export default function Home() {
       </div>
 
       {/* Filter Buttons */}
-      <div className="flex gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6">
         {[
           { label: 'All', value: 'all', style: 'bg-indigo-400 text-white' },
           { label: 'Low Stock', value: 'low', style: 'bg-red-400 text-white' },
-          { label: 'Almost Low', value: 'almost', style: 'bg-yellow-300 text-yellow-900' }
+          { label: 'Almost Low Stock', value: 'almost', style: 'bg-yellow-300 text-yellow-900' },
+          { label: 'Expired', value: 'expired', style: 'bg-black text-white' },
+          { label: 'Almost Expired', value: 'almost_expired', style: 'bg-yellow-800 text-white' }
         ].map(({ label, value, style }) => (
           <button
             key={value}
@@ -92,13 +98,16 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Product Grid */}
+      {/* Product Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProducts.map(product => {
+          const now = new Date();
+          const expiry = product.expiry_date ? new Date(product.expiry_date) : null;
+          const isExpired = expiry && expiry < now;
+          const isAlmostExpired = expiry && expiry >= now && (expiry - now) / (1000 * 60 * 60 * 24) <= 5;
           const isLow = product.quantity <= product.alert_threshold;
-          const isAlmostLow =
-            product.quantity > product.alert_threshold &&
-            product.quantity <= product.alert_threshold + 5;
+          const isAlmostLow = product.quantity > product.alert_threshold &&
+                              product.quantity <= product.alert_threshold + 5;
 
           return (
             <div
@@ -108,29 +117,51 @@ export default function Home() {
                   ? 'bg-red-50 border-red-300'
                   : isAlmostLow
                   ? 'bg-yellow-50 border-yellow-300'
+                  : isExpired
+                  ? 'bg-gray-200 border-black'
                   : 'bg-white border-gray-200'
               }`}
             >
+              {/* Product Header */}
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-                {isLow && (
-                  <span className="text-sm font-medium text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
-                    Low
-                  </span>
-                )}
-                {isAlmostLow && (
-                  <span className="text-sm font-medium text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full">
-                    Almost Low
-                  </span>
-                )}
+                <div className="flex flex-wrap gap-1">
+                  {isExpired && (
+                    <span className="text-xs font-bold text-white bg-black px-2 py-0.5 rounded-full">
+                      Expired
+                    </span>
+                  )}
+                  {!isExpired && isAlmostExpired && (
+                    <span className="text-xs font-medium text-yellow-900 bg-yellow-200 px-2 py-0.5 rounded-full">
+                      Almost Expired
+                    </span>
+                  )}
+                  {isLow && (
+                    <span className="text-xs font-medium text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+                      Low
+                    </span>
+                  )}
+                  {isAlmostLow && (
+                    <span className="text-xs font-medium text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full">
+                      Almost Low Stock
+                    </span>
+                  )}
+                </div>
               </div>
 
+              {/* Product Details */}
               <p className="text-sm text-gray-600">SKU: {product.sku}</p>
-              <p className="text-sm text-gray-600 mb-3">Qty: {product.quantity}</p>
+              <p className="text-sm text-gray-600">Qty: {product.quantity}</p>
+              {product.expiry_date && (
+                <p className="text-sm text-gray-600">
+                  Expiry: {new Date(product.expiry_date).toLocaleDateString()}
+                </p>
+              )}
 
+              {/* Edit Button */}
               <Link
                 to={`/edit/${product.id}`}
-                className="inline-block mt-2 text-sm font-semibold text-indigo-600 hover:text-orange-500 transition-colors"
+                className="inline-block mt-3 text-sm font-semibold text-indigo-600 hover:text-orange-500 transition-colors"
               >
                 Edit Product →
               </Link>

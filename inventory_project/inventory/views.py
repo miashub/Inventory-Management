@@ -54,7 +54,6 @@ def products(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request, pk):
     """
@@ -98,14 +97,14 @@ def product_detail(request, pk):
 
     elif request.method == 'DELETE':
         ProductActionLog.objects.create(
-            product=product,
+            product=None,  # FK is null since product will be deleted
             product_name=product.name,
             product_sku=product.sku,
             action='delete',
             source=request.GET.get('source', 'manual'),
-            quantity_change=str(product.quantity),
-            threshold_change=str(product.alert_threshold),
-            current_quantity=product.quantity,
+            quantity_change=f"-{abs(product.quantity)}",
+            threshold_change="0",
+            current_quantity=0,
             current_threshold=product.alert_threshold
         )
         product.delete()
@@ -172,7 +171,7 @@ def scan_today(request):
 def product_logs(request):
     """
     GET: Returns the product action logs (add/edit/delete) from ProductActionLog.
-    Each log includes product name, SKU, changes, and timestamp.
+    Each log includes product name, SKU, expiry date, changes, and timestamp.
     """
     logs = ProductActionLog.objects.order_by('-timestamp')
     data = [
@@ -180,16 +179,18 @@ def product_logs(request):
             'product': {
                 'name': log.product_name,
                 'sku': log.product_sku,
-                'id': log.product.id if log.product else None
+                'id': log.product.id if log.product else None,
+                'expiry_date': log.product.expiry_date.isoformat() if log.product and log.product.expiry_date else None
             },
             'action': log.action,
             'source': log.source,
             'quantity_change': log.quantity_change,
-            'threshold_change': log.threshold_change,
             'current_quantity': log.current_quantity,
+            'threshold_change': log.threshold_change,
             'current_threshold': log.current_threshold,
             'timestamp': log.timestamp
         }
         for log in logs
     ]
     return Response(data)
+

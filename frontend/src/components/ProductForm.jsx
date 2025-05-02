@@ -29,6 +29,7 @@ export default function ProductForm({
     sku: initial.sku || '',
     barcode: initial.barcode || '',
     quantity: initial.quantity || '',
+    expiry_date: initial.expiry_date || '',
     alert_threshold: initial.alert_threshold || ''
   });
 
@@ -98,84 +99,87 @@ export default function ProductForm({
     { name: 'sku', label: 'SKU', type: 'text' },
     { name: 'barcode', label: 'UPC', type: 'text' },
     { name: 'quantity', label: 'Quantity', type: 'number' },
-    { name: 'alert_threshold', label: 'Alert Threshold', type: 'number' }
+    { name: 'alert_threshold', label: 'Alert Threshold', type: 'number' },
+    { name: 'expiry_date', label: 'Expiry Date', type: 'date' }
   ];
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-xl mx-auto bg-white border border-orange-200 rounded-2xl p-8 shadow-lg"
-    >
-      {/* Title */}
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl font-bold text-indigo-800 border-b-2 border-orange-400 inline-block pb-1">
-          {submitLabel}
-        </h2>
-      </div>
+    <div className="px-4 sm:px-6">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-xl mx-auto bg-white border border-orange-200 rounded-2xl p-6 sm:p-8 shadow-lg"
+      >
+        {/* Title */}
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold text-indigo-800 border-b-2 border-orange-400 inline-block pb-1">
+            {submitLabel}
+          </h2>
+        </div>
 
-      {/* Form Fields */}
-      <div className="grid gap-5">
-        {fields.map(({ name, label, type }) => (
-          <div key={name}>
-            <label htmlFor={name} className="block text-sm font-medium text-indigo-700 mb-1">
-              {label}
-            </label>
+        {/* Form Fields */}
+        <div className="grid gap-6">
+          {fields.map(({ name, label, type }) => (
+            <div key={name}>
+              <label htmlFor={name} className="block text-sm font-medium text-indigo-700 mb-1">
+                {label}
+              </label>
 
-            {/* Conditionally show scan button for barcode */}
-            {name === 'barcode' && showScanButton ? (
-              <div className="flex gap-2">
+              {/* Conditionally show scan button for barcode */}
+              {name === 'barcode' && showScanButton ? (
+                <div className="flex flex-wrap gap-2">
+                  <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={form[name]}
+                    onChange={handleChange}
+                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setScannerOpen(true)}
+                    className="min-w-fit px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-md shadow transition"
+                  >
+                    Scan
+                  </button>
+                </div>
+              ) : (
                 <input
                   id={name}
                   name={name}
                   type={type}
                   value={form[name]}
                   onChange={handleChange}
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 />
-                <button
-                  type="button"
-                  onClick={() => setScannerOpen(true)}
-                  className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-md shadow transition"
-                >
-                  Scan
-                </button>
-              </div>
-            ) : (
-              <input
-                id={name}
-                name={name}
-                type={type}
-                value={form[name]}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-              />
-            )}
+              )}
 
-            {/* Error message display */}
-            {errors[name] && (
-              <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
-            )}
-          </div>
-        ))}
-      </div>
+              {/* Error message display */}
+              {errors[name] && (
+                <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
+              )}
+            </div>
+          ))}
+        </div>
 
-      {/* Submit Button */}
-      <div className="mt-6">
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg shadow transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Submitting...' : submitLabel}
-        </button>
-      </div>
+        {/* Submit Button */}
+        <div className="mt-6">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg shadow transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Submitting...' : submitLabel}
+          </button>
+        </div>
 
-      {/* Barcode Scanner Modal */}
-      <BarcodeScannerModal
-        isOpen={scannerOpen}
-        onClose={() => setScannerOpen(false)}
-        onScan={(scanned) => setForm((prev) => ({ ...prev, barcode: scanned }))}
-      />
-    </form>
+        {/* Barcode Scanner Modal */}
+        <BarcodeScannerModal
+          isOpen={scannerOpen}
+          onClose={() => setScannerOpen(false)}
+          onScan={(scanned) => setForm((prev) => ({ ...prev, barcode: scanned }))}
+        />
+      </form>
+    </div>
   );
 }

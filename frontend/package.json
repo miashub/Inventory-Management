@@ -13,11 +13,13 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.7.4",
     "html5-qrcode": "^2.3.8",
+    "lucide-react": "^0.503.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-qr-barcode-scanner": "^2.0.4",
     "react-router-dom": "^7.5.1",
     "react-scripts": "^5.0.1",
+    "recharts": "^2.15.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

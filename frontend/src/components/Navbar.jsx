@@ -3,19 +3,18 @@
 /**
  * Navbar Component
  *
- * A responsive navigation bar for the Inventory System.
- * It includes animated tab highlighting using Framer Motion,
- * dynamic active link detection via React Router, and
- * scalable structure using a route config array.
- *
+ * A responsive, sticky navigation bar for the Inventory System.
  * Features:
- * - Highlights the current route with a smooth animated background
- * - Fully responsive with Tailwind CSS
- * - Accessible and visually consistent across screen sizes
+ * - Highlights the active route with animated Framer Motion background
+ * - Fully mobile responsive with Tailwind CSS
+ * - Hamburger menu for small screens
+ * - Accessible and scalable with dynamic nav item config
  */
 
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 // Navigation routes
 const navItems = [
@@ -27,22 +26,30 @@ const navItems = [
 ];
 
 export default function Navbar() {
-  const { pathname } = useLocation(); // Get current route path
+  const { pathname } = useLocation(); // Current route
+  const [menuOpen, setMenuOpen] = useState(false); // Mobile menu toggle
 
   return (
-    <nav className="bg-indigo-700 text-white px-6 py-4 shadow-md">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <nav className="sticky top-0 z-50 bg-indigo-700 text-white px-4 sm:px-6 py-3 shadow-md">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* App Title */}
-        <h1 className="text-2xl font-bold tracking-wide">Inventory System</h1>
+        <h1 className="text-xl sm:text-2xl font-bold tracking-wide">Inventory System</h1>
 
-        {/* Navigation Links */}
-        <div className="relative flex flex-wrap gap-3 text-sm sm:text-base">
+        {/* Hamburger Button (Mobile Only) */}
+        <button
+          className="sm:hidden text-white focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Desktop Nav */}
+        <div className="hidden sm:flex gap-4 text-sm sm:text-base">
           {navItems.map(({ to, label }) => {
             const isActive = pathname === to;
-
             return (
               <div key={to} className="relative">
-                {/* Link Label */}
                 <NavLink
                   to={to}
                   className={`relative z-10 px-4 py-2 rounded-full transition-colors duration-300 ${
@@ -51,23 +58,16 @@ export default function Navbar() {
                 >
                   {label}
                 </NavLink>
-
-                {/* Animated Active Tab Highlight */}
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
                       layoutId="activeTab"
                       className="absolute inset-0 z-0 bg-orange-400"
-                      style={{ borderRadius: '9999px' }} // pill shape
+                      style={{ borderRadius: '9999px' }}
                       initial={{ opacity: 0.5, scaleX: 1 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       exit={{ opacity: 0, scaleX: 0.9 }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 120,
-                        damping: 12,
-                        mass: 0.4,
-                      }}
+                      transition={{ type: 'spring', stiffness: 120, damping: 12, mass: 0.4 }}
                     />
                   )}
                 </AnimatePresence>
@@ -76,6 +76,28 @@ export default function Navbar() {
           })}
         </div>
       </div>
+
+      {/* Mobile Nav Menu */}
+      {menuOpen && (
+        <div className="sm:hidden mt-3 flex flex-col items-center gap-3">
+          {navItems.map(({ to, label }) => {
+            const isActive = pathname === to;
+            return (
+              <div key={to} className="relative w-full text-center">
+                <NavLink
+                  to={to}
+                  onClick={() => setMenuOpen(false)}
+                  className={`relative z-10 inline-block px-4 py-2 rounded-full transition-colors duration-300 w-full ${
+                    isActive ? 'text-black bg-orange-400' : 'text-white hover:text-orange-300'
+                  }`}
+                >
+                  {label}
+                </NavLink>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </nav>
   );
 }

@@ -82,7 +82,7 @@ WSGI_APPLICATION = "inventory_project.wsgi.application"
 
 # ---------------- Database Configuration ----------------
 
-# Uses DATABASE_URL from .env (e.g., for PostgreSQL via Supabase or Render)
+# Uses DATABASE_URL 
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }

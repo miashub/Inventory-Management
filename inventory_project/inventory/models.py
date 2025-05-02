@@ -6,13 +6,14 @@ from django.utils import timezone
 
 class Product(models.Model):
     """
-    Represents an inventory product with unique SKU and barcode.
+    Represents an inventory product with unique SKU and barcode and also the expiry date.
     Includes stock quantity and low-stock threshold settings.
     """
     name = models.CharField(max_length=100)
     sku = models.CharField(max_length=50, unique=True)
     barcode = models.CharField(max_length=50, unique=True, default="000000")
     quantity = models.PositiveIntegerField()
+    expiry_date = models.DateField()
     alert_threshold = models.PositiveIntegerField(default=10)
     created_at = models.DateTimeField(auto_now_add=True)
 
